@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Religiões do Mundo | Atlas Cultural</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --brand-gold: #c5a059;
+            --brand-charcoal: #1a1a1a;
+            --brand-bg: #fdfdfc;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--brand-bg);
+            color: var(--brand-charcoal);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .serif-display {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Micro-interactions & Animations */
+        .religion-card {
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .religion-card:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.12);
+        }
+
+        .image-zoom-container img {
+            transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .religion-card:hover .image-zoom-container img {
+            transform: scale(1.08);
+        }
+
+        /* Glassmorphism & Overlays */
+        .glass-nav {
+            background: rgba(253, 253, 252, 0.85);
+            backdrop-filter: saturate(180%) blur(20px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .overlay-gradient {
+            background: linear-gradient(to top, rgba(26, 26, 26, 0.9) 0%, rgba(26, 26, 26, 0.3) 50%, transparent 100%);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { 
+            background: #d1d1d1; 
+            border-radius: 10px;
+            transition: background 0.3s;
+        }
+        ::-webkit-scrollbar-thumb:hover { background: var(--brand-gold); }
+
+        /* Off-canvas */
+        #offCanvas {
+            transition: transform 0.5s cubic-bezier(0.33, 1, 0.68, 1);
+            box-shadow: -20px 0 50px rgba(0,0,0,0.1);
+        }
+
+        .stagger-item {
+            opacity: 0;
+            transform: translateX(15px);
+            transition: all 0.4s ease;
+        }
+
+        .open .stagger-item {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Section divider */
+        .elegant-divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(197, 160, 89, 0.4), transparent);
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <!-- Hero Section -->
+    <header class="relative min-h-[70vh] flex items-center justify-center overflow-hidden bg-stone-900">
+        <div class="absolute inset-0 z-0">
+            <div class="absolute inset-0 bg-black/40 z-10"></div>
+            <img src="https://images.unsplash.com/photo-1438232992991-995b7058bbb3?auto=format&fit=crop&q=80&w=2000" 
+                 class="w-full h-full object-cover scale-105 animate-[zoomOut_20s_infinite_alternate]" alt="Background">
+        </div>
+        
+        <div class="relative z-20 max-w-5xl mx-auto px-6 text-center">
+            <div class="inline-flex items-center gap-3 px-4 py-1.5 mb-8 border border-white/20 rounded-full backdrop-blur-md">
+                <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+                <span class="text-[10px] font-bold tracking-[0.3em] uppercase text-white/90">Curadoria Global 2024</span>
+            </div>
+            <h1 class="serif-display text-6xl md:text-8xl font-black text-white mb-8 tracking-tighter leading-none">
+                Atlas da <br/><span class="text-amber-200">Espiritualidade</span>
+            </h1>
+            <p class="text-lg md:text-xl text-white/80 font-light max-w-2xl mx-auto leading-relaxed italic border-l-2 border-amber-400/50 pl-6">
+                "Uma exploração visual e antropológica das tradições que moldaram a consciência humana através dos séculos."
+            </p>
+        </div>
+    </header>
+
+    <!-- Search/Navigation -->
+    <nav class="sticky top-0 z-40 glass-nav py-5 px-6 transition-all duration-300" id="mainNav">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex items-center gap-2">
+                <span class="serif-display text-2xl font-black tracking-tighter">AM.</span>
+                <span class="h-4 w-px bg-stone-300 mx-2"></span>
+                <span class="text-[10px] font-bold tracking-widest uppercase text-stone-500">Atlas Mundi</span>
+            </div>
+            
+            <div class="relative w-full md:w-[500px]">
+                <input type="text" id="searchInput" placeholder="Procure por dogma, geografia ou costume..." 
+                    class="w-full pl-12 pr-4 py-3 bg-stone-100/50 border border-stone-200 rounded-xl text-stone-800 font-medium outline-none transition-all focus:bg-white focus:ring-4 focus:ring-amber-400/10 focus:border-amber-400">
+                <svg class="absolute left-4 top-3.5 h-5 w-5 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Grid -->
+    <main class="max-w-7xl mx-auto px-6 py-20">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12" id="religionsGrid">
+            <!-- Cards injetados via JS -->
+        </div>
+
+        <div id="emptyState" class="hidden text-center py-40">
+            <div class="w-20 h-20 bg-stone-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg class="w-10 h-10 text-stone-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-width="1.5"/></svg>
+            </div>
+            <h3 class="serif-display text-2xl font-bold text-stone-800">Sem resultados para a sua busca</h3>
+            <p class="text-stone-500 mt-2">Tente termos mais genéricos ou verifique a grafia.</p>
+        </div>
+    </main>
+
+    <!-- Off-Canvas -->
+    <div id="offCanvasOverlay" class="fixed inset-0 bg-stone-900/40 z-50 opacity-0 pointer-events-none backdrop-blur-sm transition-opacity duration-500" onclick="closeOffCanvas()"></div>
+    
+    <div id="offCanvas" class="fixed inset-y-0 right-0 w-full md:w-[600px] bg-white z-[60] translate-x-full flex flex-col">
+        <div class="h-2 bg-amber-400 w-full"></div>
+        
+        <div class="p-8 md:p-12 flex justify-between items-center border-b border-stone-100">
+            <div class="flex items-center gap-6">
+                <span id="ocIcon" class="text-5xl filter drop-shadow-sm"></span>
+                <div>
+                    <h2 id="ocName" class="serif-display text-4xl font-black text-stone-900 tracking-tight"></h2>
+                    <p class="text-[10px] font-bold tracking-[0.2em] text-amber-600 uppercase mt-1">Perfil Antropológico Detalhado</p>
+                </div>
+            </div>
+            <button onclick="closeOffCanvas()" class="group p-3 hover:bg-stone-50 rounded-full transition-all">
+                <svg class="w-6 h-6 text-stone-400 group-hover:text-stone-900 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        
+        <div id="ocContent" class="flex-grow overflow-y-auto p-8 md:p-12 space-y-12">
+            <!-- Conteúdo dinâmico -->
+        </div>
+    </div>
+
+    <footer class="bg-stone-900 py-20">
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div>
+                <span class="serif-display text-3xl font-black text-white">Atlas Mundi.</span>
+                <p class="text-stone-500 mt-4 max-w-sm leading-relaxed">
+                    Um arquivo digital dedicado à preservação e educação sobre a diversidade das manifestações do sagrado.
+                </p>
+            </div>
+            <div class="md:text-right">
+                <p class="text-amber-400 font-bold text-sm tracking-widest uppercase">Exploração Cultural</p>
+                <p class="text-stone-500 text-xs mt-2">© 2024 • Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const religions = [
+            {
+                id: 0,
+                name: "Cristianismo",
+                icon: "✝️",
+                followers: "~2.4 Bilhões",
+                peopleImg: "https://images.unsplash.com/photo-1438032005730-c779502df39b?w=1200&q=80",
+                foodImg: "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=800&q=80",
+                description: "Centrado na figura de Jesus Cristo, enfatiza o amor, a redenção e a vida eterna através da comunhão sagrada.",
+                details: "O Cristianismo é a maior religião do mundo, com uma vasta diversidade de denominações, desde o Catolicismo Romano às igrejas Ortodoxas e Protestantes. A sua arte e arquitectura definiram a estética ocidental por milénios.",
+                tags: ["Catolicismo", "Ortodoxia", "Protestantismo"],
+                origin: "Judeia (Médio Oriente)",
+                holyBook: "Bíblia Sagrada",
+                philosophy: "Monoteísmo, Trindade, Salvação"
+            },
+            {
+                id: 1,
+                name: "Islamismo",
+                icon: "☪️",
+                followers: "~1.9 Bilhões",
+                peopleImg: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=1200&q=80",
+                foodImg: "https://images.unsplash.com/photo-1529006557810-274b9b2fc783?w=800&q=80",
+                description: "Baseado na submissão à vontade de Allah e nos ensinamentos do Profeta Muhammad descritos no Alcorão.",
+                details: "Estruturado sobre os cinco pilares (Fé, Oração, Caridade, Jejum e Peregrinação), o Islão promove uma vida de disciplina espiritual e justiça social profunda.",
+                tags: ["Sunitas", "Xiitas", "Sufismo"],
+                origin: "Meca (Arábia Saudita)",
+                holyBook: "Alcorão Sagrado",
+                philosophy: "Tawhid (Unicidade), Submissão"
+            },
+            {
+                id: 2,
+                name: "Hinduísmo",
+                icon: "🕉️",
+                followers: "~1.2 Bilhões",
+                peopleImg: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=1200&q=80",
+                foodImg: "https://images.unsplash.com/photo-1546833998-877b37c2e5c6?w=800&q=80",
+                description: "Uma síntese complexa de caminhos espirituais que busca a libertação do ciclo de reencarnação através do Dharma.",
+                details: "Considerada por muitos como a religião viva mais antiga, o Hinduísmo não possui um fundador único, funcionando como uma filosofia vasta que abrange milhões de divindades sob uma realidade suprema (Brahman).",
+                tags: ["Karma", "Yoga", "Vedanta"],
+                origin: "Vale do Indo (Índia)",
+                holyBook: "Vedas & Upanishads",
+                philosophy: "Dharma, Karma, Moksha"
+            },
+            {
+                id: 3,
+                name: "Budismo",
+                icon: "☸️",
+                followers: "~520 Milhões",
+                peopleImg: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=1200&q=80",
+                foodImg: "https://images.unsplash.com/photo-1512058564366-18510be2db19?w=800&q=80",
+                description: "Um caminho de autotransformação focado na superação do sofrimento e no alcance do Nirvana através da consciência plena.",
+                details: "Fundado por Siddhartha Gautama, o Buda, este ensinamento propõe as Quatro Nobres Verdades e o Caminho Óctuplo como guias para a iluminação espiritual sem a necessidade de um deus criador.",
+                tags: ["Zen", "Theravada", "Mahayana"],
+                origin: "Nepal / Índia",
+                holyBook: "Tripitaka",
+                philosophy: "Não-eu, Impermanência"
+            },
+            {
+                id: 4,
+                name: "Judaísmo",
+                icon: "✡️",
+                followers: "~15 Milhões",
+                peopleImg: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1200&q=80",
+                foodImg: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800&q=80",
+                description: "A mais antiga das religiões abraâmicas, focada na Aliança entre Deus e o povo através da lei e da tradição.",
+                details: "Mais do que uma fé, o Judaísmo é uma identidade cultural e ética robusta, onde o estudo da Torá e a prática da justiça (Tzedakah) são os alicerces da vida quotidiana.",
+                tags: ["Ortodoxo", "Reformista", "Conservador"],
+                origin: "Canaã (Médio Oriente)",
+                holyBook: "Torá (Tanakh)",
+                philosophy: "Ética, Aliança, Tikkun Olam"
+            },
+            {
+                id: 5,
+                name: "Sikhismo",
+                icon: "☬",
+                followers: "~30 Milhões",
+                peopleImg: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=1200&q=80",
+                foodImg: "https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=800&q=80",
+                description: "Enfatiza a igualdade de toda a humanidade, o serviço altruísta e a devoção a um único Deus sem forma.",
+                details: "Os Sikhs são conhecidos pelo seu compromisso inabalável com a justiça social. Os seus templos (Gurdwaras) são famosos por servirem refeições gratuitas a todos, independentemente da casta ou religião.",
+                tags: ["Kirpan", "Kaur", "Singh"],
+                origin: "Punjab (Índia/Paquistão)",
+                holyBook: "Guru Granth Sahib",
+                philosophy: "Igualdade Radical, Serviço"
+            }
+        ];
+
+        function createCard(r, index) {
+            return `
+                <div class="religion-card bg-white border border-stone-100 rounded-3xl overflow-hidden flex flex-col group" style="animation-delay: ${index * 0.1}s">
+                    <div class="relative h-64 overflow-hidden image-zoom-container">
+                        <img src="${r.peopleImg}" alt="${r.name}" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 overlay-gradient"></div>
+                        <div class="absolute bottom-6 left-8">
+                            <h2 class="serif-display text-4xl text-white font-black tracking-tight">${r.name}</h2>
+                            <div class="flex items-center gap-2 mt-2">
+                                <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+                                <span class="text-[10px] font-bold text-white/80 uppercase tracking-widest">${r.followers}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="p-8 flex-grow flex flex-col">
+                        <p class="text-stone-600 font-medium leading-relaxed mb-8 flex-grow">
+                            ${r.description}
+                        </p>
+                        
+                        <div class="elegant-divider mb-8"></div>
+                        
+                        <button onclick="openOffCanvas(${r.id})" 
+                                class="group/btn relative w-full py-4 bg-stone-900 text-white font-bold text-xs uppercase tracking-[0.2em] rounded-2xl overflow-hidden transition-all hover:bg-stone-800 active:scale-95">
+                            <span class="relative z-10 flex items-center justify-center gap-3">
+                                Analisar Perfil
+                                <svg class="w-4 h-4 transition-transform group-hover/btn:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function openOffCanvas(id) {
+            const r = religions.find(item => item.id === id);
+            if(!r) return;
+
+            document.getElementById('ocIcon').textContent = r.icon;
+            document.getElementById('ocName').textContent = r.name;
+            
+            document.getElementById('ocContent').innerHTML = `
+                <div class="stagger-item delay-75">
+                    <div class="rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-white aspect-[16/10]">
+                        <img src="${r.peopleImg}" class="w-full h-full object-cover" alt="Representação">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-6 stagger-item delay-100">
+                    <div class="p-6 bg-stone-50 rounded-3xl border border-stone-100">
+                        <span class="text-[9px] font-black text-amber-600 uppercase tracking-widest block mb-2">Local de Origem</span>
+                        <span class="text-base font-bold text-stone-900">${r.origin}</span>
+                    </div>
+                    <div class="p-6 bg-stone-50 rounded-3xl border border-stone-100">
+                        <span class="text-[9px] font-black text-amber-600 uppercase tracking-widest block mb-2">Eixo Filosófico</span>
+                        <span class="text-base font-bold text-stone-900">${r.philosophy}</span>
+                    </div>
+                </div>
+
+                <div class="space-y-6 stagger-item delay-150">
+                    <h3 class="serif-display text-3xl font-black text-stone-900 flex items-center gap-4">
+                        Crónica da Tradição
+                        <span class="h-px flex-grow bg-stone-100"></span>
+                    </h3>
+                    <p class="text-stone-700 leading-loose font-medium text-lg italic pr-4 border-l-4 border-amber-200 pl-6">${r.details}</p>
+                </div>
+
+                <div class="p-10 bg-stone-900 rounded-[3rem] text-white flex flex-col md:flex-row gap-10 items-center stagger-item delay-200">
+                    <div class="w-32 h-32 rounded-3xl overflow-hidden shadow-xl border-2 border-white/10 flex-shrink-0">
+                        <img src="${r.foodImg}" class="w-full h-full object-cover" alt="Simbologia">
+                    </div>
+                    <div>
+                        <span class="text-[9px] font-black text-amber-400 uppercase tracking-[0.3em] block mb-3">Manifestação Material</span>
+                        <h4 class="serif-display text-2xl font-bold mb-3">O Sagrado no Quotidiano</h4>
+                        <p class="text-stone-400 text-sm leading-relaxed font-medium">As práticas alimentares e rituais desta fé servem como uma ponte constante entre o mundo físico e a aspiração divina.</p>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap gap-3 stagger-item delay-300">
+                    <span class="text-[10px] font-black text-stone-400 uppercase mr-2 mt-2">Terminologia:</span>
+                    ${r.tags.map(t => `<span class="px-4 py-2 bg-stone-100 text-stone-900 text-[10px] font-bold rounded-xl uppercase tracking-widest border border-stone-200">${t}</span>`).join('')}
+                </div>
+            `;
+
+            const oc = document.getElementById('offCanvas');
+            oc.classList.remove('translate-x-full');
+            oc.classList.add('open');
+            document.getElementById('offCanvasOverlay').classList.remove('pointer-events-none', 'opacity-0');
+            document.body.classList.add('overflow-hidden');
+        }
+
+        function closeOffCanvas() {
+            const oc = document.getElementById('offCanvas');
+            oc.classList.add('translate-x-full');
+            oc.classList.remove('open');
+            document.getElementById('offCanvasOverlay').classList.add('pointer-events-none', 'opacity-0');
+            document.body.classList.remove('overflow-hidden');
+        }
+
+        function render(data) {
+            const grid = document.getElementById('religionsGrid');
+            const empty = document.getElementById('emptyState');
+            
+            if (data.length === 0) {
+                grid.innerHTML = '';
+                empty.classList.remove('hidden');
+            } else {
+                empty.classList.add('hidden');
+                grid.innerHTML = data.map((r, i) => createCard(r, i)).join('');
+            }
+        }
+
+        // Search logic
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const filtered = religions.filter(r => 
+                r.name.toLowerCase().includes(term) || 
+                r.description.toLowerCase().includes(term) ||
+                r.philosophy.toLowerCase().includes(term)
+            );
+            render(filtered);
+        });
+
+        // Initialize
+        render(religions);
+
+        // Header Shadow on Scroll
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('mainNav');
+            if(window.scrollY > 100) {
+                nav.classList.add('shadow-xl');
+            } else {
+                nav.classList.remove('shadow-xl');
+            }
+        });
+    </script>
+</body>
+</html>
